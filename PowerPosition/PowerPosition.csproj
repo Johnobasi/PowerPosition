@@ -10,4 +10,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PowerService">
+      <HintPath>..\..\..\PetroineosCodingChallenge-main\PetroineosCodingChallenge-main\PowerService.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
