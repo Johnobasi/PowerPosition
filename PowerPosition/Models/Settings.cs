@@ -1,4 +1,4 @@
-﻿namespace PowerPosition.Interfaces
+﻿namespace PowerPosition.Models
 {
     internal class Settings
     {
