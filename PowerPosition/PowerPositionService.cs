@@ -7,7 +7,7 @@ using System.Text;
 
 namespace PowerPosition
 {
-    internal class PowerPositionService(ILogger<PowerPositionService> logger, IOptions<Settings> settings, PowerService powerService) : IPowerPositionService
+    public class PowerPositionService(ILogger<PowerPositionService> logger, IOptions<Settings> settings, PowerService powerService) : IPowerPositionService
     {
         private readonly ILogger<PowerPositionService> _logger = logger;
         private readonly Settings _settings = settings.Value;
@@ -18,15 +18,17 @@ namespace PowerPosition
 
             try
             {
+
                 _logger.LogInformation("=== Starting Power Position generation cycle ===");
 
                 DateTime currentLondonTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Europe/London"));
-                DateTime tradeDate = currentLondonTime.Date;
+                DateTime tradeDate = currentLondonTime.Date.AddHours(1);
                 _logger.LogInformation("Local London time: {CurrentTime}. Processing trade date: {TradeDate:yyyy-MM-dd}.",
                     currentLondonTime, tradeDate);
 
-
-                _logger.LogInformation("Fetching power trades from external PowerService for {TradeDate:yyyy-MM-dd}...", tradeDate);
+                _logger.LogInformation(
+                    "Fetching power trades from external PowerService for {TradeDate}...",
+                    tradeDate.ToString("yyyy-MM-dd HH:mm:ss"));
                 var powerTrades = await _powerServiceClient.GetTradesAsync(tradeDate);
                 if (powerTrades == null || !powerTrades.Any())
                 {
@@ -55,7 +57,7 @@ namespace PowerPosition
 
                 foreach (var item in hourlyAggregatedPositions)
                 {
-                    var periodStartTime = powerDayStartTime.AddHours(item.Period);
+                    var periodStartTime = powerDayStartTime.AddHours(item.Period -1);
                     var hourlyVolume = Math.Round(item.Volume, 2, MidpointRounding.AwayFromZero);
                     csvBuilder.AppendLine($"{periodStartTime:HH:mm},{hourlyVolume.ToString(CultureInfo.InvariantCulture)}");
                 }
