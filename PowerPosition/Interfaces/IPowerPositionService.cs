@@ -1,6 +1,6 @@
 ﻿namespace PowerPosition.Interfaces
 {
-    internal interface IPowerPositionService
+    public interface IPowerPositionService
     {
         Task GenerateAsync();
     }
