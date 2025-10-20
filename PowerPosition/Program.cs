@@ -21,8 +21,9 @@ namespace PowerPosition
 
                 Log.Information("Starting PowerPosition window service...");
                 builder.Services.Configure<Settings>(builder.Configuration.GetSection(nameof(Settings)));
+                builder.Services.AddSingleton<IPowerServiceClient, PowerServiceClient>();
                 builder.Services.AddSingleton<PowerService>();
-                builder.Services.AddSingleton<PowerPositionService, PowerPositionService>();
+                builder.Services.AddSingleton<IPowerPositionService, PowerPositionService>();
                 builder.Services.AddHostedService<Worker>();
 
                 builder.Logging.ClearProviders();
